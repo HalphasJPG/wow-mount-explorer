@@ -1,8 +1,8 @@
 import os
 import requests
 from dotenv import load_dotenv
+from datetime import datetime  # Ny import!
 
-# Ladda miljövariabler (API-nycklar)
 load_dotenv()
 
 def get_access_token():
@@ -27,30 +27,33 @@ def get_mount_details(token, mount_id):
     response = requests.get(url, headers=headers, params=params)
     return response.json() if response.status_code == 200 else None
 
-# --- Main Application Loop ---
+# --- Main Application ---
 token = get_access_token()
 
 if token:
+    # Hämtar dagens datum och tid
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     all_mounts = get_wow_mounts(token)
-    print("Välkommen till WoW Mount Explorer!")
+    
+    print(f"Welcome to WoW Mount Explorer!")
+    print(f"Session started at: {now}") # Visar tiden för läraren
 
     while True:
         print("\n" + "-"*30)
-        search_term = input("Sök efter en mount (eller skriv 'exit' för att avsluta): ").lower()
+        search_term = input("Search for a mount (or type 'exit'): ").lower()
         
         if search_term == 'exit':
-            print("Avslutar programmet. Hejdå!")
+            print("Closing program. Goodbye!")
             break
             
-        # Filtrera listan baserat på sökning
         results = [m for m in all_mounts if search_term in m['name'].lower()]
         
         if results:
-            print(f"\nHittade {len(results)} matchningar (visar topp 15):")
+            print(f"\nFound {len(results)} matches (showing top 15):")
             for i, m in enumerate(results[:15]):
                 print(f"{i+1}. {m['name']}")
                 
-            val = input("\nVilken vill du veta mer om? (nummer) eller tryck Enter för ny sökning: ")
+            val = input("\nEnter number for details or press Enter to search again: ")
             
             if val.isdigit():
                 val_int = int(val) - 1
@@ -62,11 +65,11 @@ if token:
                         print("\n" + "="*45)
                         print(f"  {details['name'].upper()}")
                         print("="*45)
-                        print(f"Beskrivning: {details.get('description', 'Saknas')}")
-                        print(f"Källa:       {details.get('source', {}).get('name', 'Okänd')}")
+                        print(f"Description: {details.get('description', 'N/A')}")
+                        print(f"Source:      {details.get('source', {}).get('name', 'Unknown')}")
                         print(f"ID:          {details.get('id')}")
                         print("="*45)
                 else:
-                    print("Ogiltigt nummer.")
+                    print("Invalid selection.")
         else:
-            print(f"Inga mounts hittades som matchar '{search_term}'.")
+            print(f"No mounts found matching '{search_term}'.")
