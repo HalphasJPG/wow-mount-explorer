@@ -1,27 +1,32 @@
 # WoW Mount Explorer 🐉
 
-A Python-based command-line interface (CLI) tool that allows users to explore the vast library of mounts in World of Warcraft. The application fetches real-time data directly from the official Blizzard Game Data API.
+A Python-based command-line interface (CLI) tool that allows users to explore the vast library of mounts in World of Warcraft. This application fetches real-time data directly from the official Blizzard Game Data API.
+
+## Project Logic & Data Flow
+Below is a flowchart representing the application's logic, from authentication to the interactive search loop.
+
+![Project Flowchart](./flowchart.png)
 
 ## Features
 - **OAuth2 Authentication:** Securely retrieves Access Tokens from Blizzard's servers.
-- **Advanced Search:** Filter through over 900+ mounts using keywords.
-- **Detailed Data Extraction:** View descriptions, sources, and IDs.
-- **Session Timestamps:** Displays when the search session started.
-- **Robust Error Handling:** Validates user input to prevent crashes.
-- **Interactive Loop:** Allows for continuous searching until exit.
+- **Advanced Search:** Filter through over 900+ mounts using keywords (e.g., "Drake", "Proto").
+- **Detailed Data Extraction:** View unique descriptions, source information, and IDs.
+- **Session Timestamps:** Displays exactly when the search session started.
+- **Robust Error Handling:** Validates user input to prevent crashes during selection.
+- **Interactive Loop:** User-friendly interface that allows for continuous searching.
 
-## Data Source
-All data provided by this application is fetched from the **Blizzard Entertainment API**. This project uses the:
-- [Mount API](https://develop.battle.net/documentation/world-of-warcraft/game-data-apis)
-- [OAuth2 API](https://develop.battle.net/documentation/guides/using-oauth)
+## Data Source & Attribution
+This application uses the **Blizzard Game Data API**. All World of Warcraft data is the property of Blizzard Entertainment.
+- **Source:** [Blizzard Battle.net Developer Portal](https://develop.battle.net/)
 
-## Installation & Usage
+## Installation & Setup
 
 ### 1. Prerequisites
-You need Python installed and your own API credentials from the [Battle.net Developer Portal](https://develop.battle.net/).
+- Python 3.10 or higher.
+- A Blizzard Developer account with a Client ID and Secret.
 
-### 2. Configure Environment Variables
-Create a file named `.env` in the root directory and add your keys:
+### 2. Environment Configuration
+Create a `.env` file in the root directory:
 ```env
 CLIENT_ID=your_id_here
 CLIENT_SECRET=your_secret_here
