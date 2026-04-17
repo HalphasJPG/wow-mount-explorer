@@ -3,12 +3,12 @@
 A Python-based command-line interface (CLI) tool that allows users to explore the vast library of mounts in World of Warcraft. The application fetches real-time data directly from the official Blizzard Game Data API.
 
 ## Features
-- **Secure Authentication:** Implements OAuth2 protocol to retrieve Access Tokens from Blizzard.
-- **Search & Filter:** Search by name (e.g., "Drake" or "Horse") across a database of 900+ mounts.
-- **Detailed View:** Provides descriptions, sources (how to obtain the mount), and unique IDs for each selection.
-- **Data Security:** Uses `.env` files to keep sensitive API credentials out of the source code.
-- **Interactive Loop:** Allows for continuous searching without restarting the application.
-- Session timestamps and robust error handling
+- **OAuth2 Authentication:** Securely retrieves Access Tokens from Blizzard's servers.
+- **Advanced Search:** Filter through over 900+ mounts using keywords.
+- **Detailed Data Extraction:** View descriptions, sources, and IDs.
+- **Session Timestamps:** Displays when the search session started.
+- **Robust Error Handling:** Validates user input to prevent crashes.
+- **Interactive Loop:** Allows for continuous searching until exit.
 
 ## Data Source
 All data provided by this application is fetched from the **Blizzard Entertainment API**. This project uses the:
