@@ -2,19 +2,17 @@ import os
 import requests
 from dotenv import load_dotenv
 
+# 1. Ladda inställningar från .env
 load_dotenv()
 
 def get_access_token():
     client_id = os.getenv("CLIENT_ID")
     client_secret = os.getenv("CLIENT_SECRET")
     
-    # Blizzards adress för att få tillgång
     url = "https://oauth.battle.net/token"
-    
-    # Information som Blizzard kräver
     data = {'grant_type': 'client_credentials'}
     
-    # Vi skickar ID och Secret för att bevisa vilka vi är
+    # Fråga Blizzard om lov
     response = requests.post(url, data=data, auth=(client_id, client_secret))
     
     if response.status_code == 200:
@@ -23,40 +21,39 @@ def get_access_token():
         print(f"Fel vid hämtning av token: {response.status_code}")
         return None
 
-# Testa funktionen
-token = get_access_token()
-if token:
-    print("Succé! Vi har fått ett 'pass' (Access Token) från Blizzard!")
-    print(f"Token börjar med: {token[:10]}...")
-    def get_wow_mounts(access_token):
-    # Detta är adressen till listan över alla mounts
+def get_wow_mounts(token):
+    # Adressen till mount-listan
     url = "https://eu.api.blizzard.com/data/wow/mount/index"
     
-    # Vi måste berätta för Blizzard vilken region (namespace) och vilket pass (token) vi har
     params = {
         "namespace": "static-eu",
         "locale": "en_GB"
     }
     headers = {
-        "Authorization": f"Bearer {access_token}"
+        "Authorization": f"Bearer {token}"
     }
 
     print("Hämtar mounts från Blizzard...")
     response = requests.get(url, headers=headers, params=params)
     
     if response.status_code == 200:
-        data = response.json()
-        return data['mounts'] # Returnerar själva listan
+        return response.json()['mounts']
     else:
-        print(f"Kunde inte hämta mounts. Felkod: {response.status_code}")
+        print(f"Kunde inte hämta mounts: {response.status_code}")
         return []
 
-# Använd token vi fick tidigare för att hämta listan
-mounts = get_wow_mounts(token)
+# --- HÄR STARTAR PROGRAMMET ---
+# Först hämtar vi ett "pass" (token)
+my_token = get_access_token()
 
-if mounts:
-    print(f"Hittade totalt {len(mounts)} mounts i World of Warcraft!")
-    # Visa bara de 5 första så vi inte fyller hela terminalen
-    print("Här är några exempel:")
-    for mount in mounts[:5]:
-        print(f"- {mount['name']}")
+if my_token:
+    # Sen använder vi passet för att hämta mounts
+    all_mounts = get_wow_mounts(my_token)
+    
+    if all_mounts:
+        print(f"\nSuccé! Hittade {len(all_mounts)} mounts.")
+        print("Här är de första 10 i listan:")
+        print("-" * 30)
+        
+        for mount in all_mounts[:10]:
+            print(f"• {mount['name']}")
