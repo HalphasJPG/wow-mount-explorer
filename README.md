@@ -8,6 +8,7 @@ A Python-based command-line interface (CLI) tool that allows users to explore th
 - **Detailed View:** Provides descriptions, sources (how to obtain the mount), and unique IDs for each selection.
 - **Data Security:** Uses `.env` files to keep sensitive API credentials out of the source code.
 - **Interactive Loop:** Allows for continuous searching without restarting the application.
+- Session timestamps and robust error handling
 
 ## Data Source
 All data provided by this application is fetched from the **Blizzard Entertainment API**. This project uses the:
