@@ -26,7 +26,7 @@ def get_wow_mounts(token):
     response = requests.get(url, headers=headers, params=params)
     return response.json().get('mounts', []) if response.status_code == 200 else []
 
-# --- Huvudprogram ---
+# --- Main Application Loop ---
 token = get_access_token()
 
 if token:
