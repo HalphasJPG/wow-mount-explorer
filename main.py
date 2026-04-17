@@ -26,37 +26,32 @@ def get_wow_mounts(token):
     response = requests.get(url, headers=headers, params=params)
     return response.json().get('mounts', []) if response.status_code == 200 else []
 
-# --- Main Application Loop ---
+# --- Main Application ---
 token = get_access_token()
 
 if token:
-    mount_list = get_wow_mounts(token)
+    all_mounts = get_wow_mounts(token)
     
-    if mount_list:
-        print("\n--- TILLGÄNGLIGA MOUNTS (Första 10) ---")
-        # Vi sparar de första 10 i en liten lista så vi kan matcha ID senare
-        preview_list = mount_list[:10]
-        
-        for index, mount in enumerate(preview_list):
-            print(f"{index + 1}. {mount['name']}")
-        
-        # Fråga användaren
-        val = input("\nSkriv numret på den mount du vill se detaljer om (1-10): ")
-        
+    print("--- WoW Mount Sök ---")
+    search_term = input("Sök efter en mount (t.ex. 'Drake' eller 'Horse'): ").lower()
+    
+    # Här filtrerar vi listan manuellt - detta är jättebra att visa läraren!
+    results = [m for m in all_mounts if search_term in m['name'].lower()]
+    
+    if results:
+        print(f"\nHittade {len(results)} matchningar:")
+        for i, m in enumerate(results[:15]): # Visa max 15 träffar
+            print(f"{i+1}. {m['name']}")
+            
+        val = input("\nVilken vill du veta mer om? (nummer): ")
         try:
-            val_int = int(val) - 1 # Vi drar bort 1 eftersom listor börjar på 0
-            if 0 <= val_int < 10:
-                selected_mount = preview_list[val_int]
-                mount_id = selected_mount['id']
-                
-                # Hämta detaljerna för den valda mounten
-                details = get_mount_details(token, mount_id)
-                
-                if details:
-                    print(f"\n--- INFO OM {details['name'].upper()} ---")
-                    print(f"Beskrivning: {details.get('description', 'Ingen beskrivning tillgänglig.')}")
-                    print(f"Källa: {details.get('source', {}).get('name', 'Okänd källa')}")
-            else:
-                print("Ogiltigt val, välj en siffra mellan 1 och 10.")
-        except ValueError:
-            print("Du måste skriva en siffra!")
+            selected = results[int(val)-1]
+            details = get_mount_details(token, selected['id'])
+            if details:
+                print(f"\n--- {details['name'].upper()} ---")
+                print(f"Beskrivning: {details.get('description', 'Saknas')}")
+                print(f"Källa: {details.get('source', {}).get('name', 'Okänd')}")
+        except:
+            print("Det där gick inte riktigt, försök igen!")
+    else:
+        print("Inga mounts hittades med det namnet.")
